@@ -1,0 +1,1 @@
+System.register(["./_plugin-vue_export-helper-legacy-DQdV3Orl.js"],function(e,t){"use strict";var s;return{setters:[e=>{s=e.i}],execute:function(){e("u",{login:e=>s.post("/auth/login",e),register:e=>s.post("/auth/register",e),getUsers:()=>s.get("/users"),getUserInfo:e=>s.get(`/users/${e}`),updateUser:(e,t)=>s.put(`/users/${e}`,t),deleteUser:e=>s.delete(`/users/${e}`)})}}});
