@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
   const useMock = env.VITE_USE_MOCK === 'true';
 
   return {
+    base: './',
     plugins: [
       vue(),
       legacy({
