@@ -1,0 +1,1 @@
+System.register(["./_plugin-vue_export-helper-legacy-CjzRnGw_.js"],function(e,r){"use strict";var t;return{setters:[e=>{t=e.i}],execute:function(){e("o",{getOrders:e=>t.get("/orders",{params:e}),getOrder:e=>t.get(`/orders/${e}`),createOrder:e=>t.post("/orders",e),updateOrder:(e,r)=>t.put(`/orders/${e}`,r),cancelOrder:e=>t.put(`/orders/${e}/cancel`,{})})}}});
