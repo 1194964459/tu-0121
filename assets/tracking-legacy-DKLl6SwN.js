@@ -1,1 +1,0 @@
-System.register(["./_plugin-vue_export-helper-legacy-DbparDG1.js"],function(t,e){"use strict";var i;return{setters:[t=>{i=t.i}],execute:function(){t("t",{getProcessTracking:t=>i.get(`/tracking/orders/${t}`),getTimeline:t=>i.get("/tracking/timeline",{params:t}),getStatistics:()=>i.get("/tracking/statistics")})}}});
