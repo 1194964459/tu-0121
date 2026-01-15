@@ -2,9 +2,30 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { message } from 'ant-design-vue';
 
 const useMock = import.meta.env.VITE_USE_MOCK === 'true';
+const isProduction = import.meta.env.MODE === 'production';
+const basePath = isProduction ? '/tu-0121' : '';
+
+// 生产环境如果没有配置 API 地址，使用相对路径（适配 GitHub Pages）
+// 注意：Mock 数据只在开发环境的 Vite 服务器中工作，生产环境需要真实后端
+const getBaseURL = () => {
+  // 开发环境使用 Mock
+  if (useMock && import.meta.env.DEV) {
+    return '/api';
+  }
+  
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+  // 如果是示例地址，在生产环境中忽略它，使用相对路径
+  if (apiBaseUrl && !apiBaseUrl.includes('example.com')) {
+    return apiBaseUrl;
+  }
+  
+  // 生产环境：使用 basePath 适配 GitHub Pages
+  // 由于生产环境没有 Mock，这里只是占位，实际需要后端 API
+  return basePath ? `${basePath}/api` : '/api';
+};
 
 const instance: AxiosInstance = axios.create({
-  baseURL: useMock ? '/api' : import.meta.env.VITE_API_BASE_URL,
+  baseURL: getBaseURL(),
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
@@ -48,7 +69,12 @@ instance.interceptors.response.use(
           message.error(data.message || '请求失败');
       }
     } else {
-      message.error('网络错误，请检查网络连接');
+      // 生产环境如果没有后端，静默处理错误（Mock 数据只在开发环境可用）
+      if (!import.meta.env.DEV) {
+        console.warn('API request failed (expected in production without backend):', error.message);
+      } else {
+        message.error('网络错误，请检查网络连接');
+      }
     }
     return Promise.reject(error);
   }
