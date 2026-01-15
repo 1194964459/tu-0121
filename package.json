@@ -36,7 +36,7 @@
     "format": "prettier --write src/",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist --nojekyll"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
