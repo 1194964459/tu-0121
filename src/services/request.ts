@@ -12,13 +12,13 @@ const getBaseURL = () => {
   if (useMock && import.meta.env.DEV) {
     return '/api';
   }
-  
+
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
   // 如果是示例地址，在生产环境中忽略它，使用相对路径
   if (apiBaseUrl && !apiBaseUrl.includes('example.com')) {
     return apiBaseUrl;
   }
-  
+
   // 生产环境：使用 basePath 适配 GitHub Pages
   // 由于生产环境没有 Mock，这里只是占位，实际需要后端 API
   return basePath ? `${basePath}/api` : '/api';
@@ -50,6 +50,13 @@ instance.interceptors.response.use(
     return response.data;
   },
   (error) => {
+    // 生产环境静默处理所有错误（GitHub Pages 没有后端，404是预期的）
+    if (!import.meta.env.DEV) {
+      console.debug('API request failed (expected in production without backend):', error.message || error);
+      return Promise.reject(error);
+    }
+
+    // 开发环境显示错误提示
     if (error.response) {
       const { status, data } = error.response;
       switch (status) {
@@ -69,12 +76,7 @@ instance.interceptors.response.use(
           message.error(data.message || '请求失败');
       }
     } else {
-      // 生产环境如果没有后端，静默处理错误（Mock 数据只在开发环境可用）
-      if (!import.meta.env.DEV) {
-        console.warn('API request failed (expected in production without backend):', error.message);
-      } else {
-        message.error('网络错误，请检查网络连接');
-      }
+      message.error('网络错误，请检查网络连接');
     }
     return Promise.reject(error);
   }
