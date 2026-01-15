@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const isDev = mode === 'development';
   const useMock = env.VITE_USE_MOCK === 'true';
-
+  console.log('mode', mode);
   return {
     base: mode === 'production' ? '/tu-0121/' : './',
     plugins: [
