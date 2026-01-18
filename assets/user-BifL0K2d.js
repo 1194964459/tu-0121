@@ -1,1 +1,0 @@
-import{i as r}from"./request-BJPJ4U94.js";const u={login(e){return r.post("/auth/login",e)},register(e){return r.post("/auth/register",e)},getUsers(){return r.get("/users")},getUserInfo(e){return r.get("/users/".concat(e))},updateUser(e,t){return r.put("/users/".concat(e),t)},deleteUser(e){return r.delete("/users/".concat(e))}};export{u};

@@ -1,1 +1,0 @@
-import{i as e}from"./request-BJPJ4U94.js";const o={getOrders(r){return e.get("/orders",{params:r})},getOrder(r){return e.get("/orders/".concat(r))},createOrder(r){return e.post("/orders",r)},updateOrder(r,t){return e.put("/orders/".concat(r),t)},cancelOrder(r){return e.put("/orders/".concat(r,"/cancel"),{})}};export{o};

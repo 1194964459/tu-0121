@@ -1,0 +1,1 @@
+System.register(["./request-legacy-DgrEakAZ.js"],function(e,s){"use strict";var t;return{setters:[e=>{t=e.i}],execute:function(){e("u",{login:e=>t.post("/auth/login",e),register:e=>t.post("/auth/register",e),getUsers:()=>t.get("/users"),getUserInfo:e=>t.get(`/users/${e}`),updateUser:(e,s)=>t.put(`/users/${e}`,s),deleteUser:e=>t.delete(`/users/${e}`)})}}});
