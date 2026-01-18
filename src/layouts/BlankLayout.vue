@@ -1,6 +1,5 @@
 <template>
   <div class="blank-layout">
-    http://localhost:3000/
     <router-view />
   </div>
 </template>

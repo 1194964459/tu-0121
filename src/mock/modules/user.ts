@@ -3,7 +3,9 @@ export default [
     url: '/api/auth/login',
     method: 'post',
     response: ({ body }: any) => {
-      const { email, password } = body;
+      console.log('[UserMock] 登录请求body:', body);
+      const { email, password } = body || {};
+      console.log('[UserMock] 解析的email和password:', { email, password });
       if (email === 'admin@example.com' && password === '123456') {
         return {
           code: 200,

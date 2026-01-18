@@ -9,6 +9,18 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
+    component: () => import('@/layouts/BlankLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'MapVisualization',
+        component: () => import('@/views/map-visualization/index.vue'),
+        meta: { title: '地图可视化' }
+      }
+    ]
+  },
+  {
+    path: '/dashboard',
     component: () => import('@/layouts/DefaultLayout.vue'),
     children: [
       {

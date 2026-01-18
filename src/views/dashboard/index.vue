@@ -108,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import {
   ShoppingOutlined,
   SyncOutlined,
@@ -259,17 +259,18 @@ onMounted(() => {
   fetchRecentOrders();
   fetchTimeline();
 
-  // 定时刷新数据
+  // 定时刷新数据（生产环境使用Mock数据时，可以延长刷新间隔）
+  const refreshInterval = import.meta.env.MODE === 'production' ? 60000 : 30000; // 生产环境60秒，开发环境30秒
   const interval = setInterval(() => {
     fetchStatistics();
     fetchRecentOrders();
     fetchTimeline();
-  }, 30000); // 30秒刷新一次
+  }, refreshInterval);
 
   // 组件卸载时清除定时器
-  return () => {
+  onUnmounted(() => {
     clearInterval(interval);
-  };
+  });
 });
 </script>
 

@@ -30,6 +30,8 @@ export interface PageParams {
   pageSize: number;
 }
 
+declare module 'lodash-es';
+
 export interface PageResult<T> {
   list: T[];
   total: number;

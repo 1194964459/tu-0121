@@ -18,6 +18,8 @@ export default defineConfig(({ mode }) => {
       }),
       viteMockServe({
         mockPath: 'src/mock',
+        // 只在开发环境启用Mock插件（提供HTTP服务）
+        // 生产环境通过 mockAdapter.ts 直接使用Mock数据
         enable: isDev && useMock,
         watchFiles: true,
         logger: true
