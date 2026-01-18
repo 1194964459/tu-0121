@@ -1,0 +1,1 @@
+import{_ as o}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{_ as t,V as r,k as a,U as c}from"./vue-vendor-CWu0UK2c.js";const n={},s={class:"blank-layout"};function _(d,l){const e=c("router-view");return r(),t("div",s,[a(e)])}const p=o(n,[["render",_],["__scopeId","data-v-d94d6129"]]);export{p as default};

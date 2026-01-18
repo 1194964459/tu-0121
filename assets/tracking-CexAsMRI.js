@@ -1,0 +1,1 @@
+import{i as e}from"./request-BJPJ4U94.js";const r={getProcessTracking(t){return e.get("/tracking/orders/".concat(t))},getTimeline(t){return e.get("/tracking/timeline",{params:t})},getStatistics(){return e.get("/tracking/statistics")}};export{r as t};
