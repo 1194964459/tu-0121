@@ -3,11 +3,8 @@ import { message } from 'ant-design-vue';
 import { mockAdapter } from './mockAdapter';
 
 const useMock = import.meta.env.VITE_USE_MOCK === 'true';
-const isProduction = import.meta.env.MODE === 'production';
-const basePath = isProduction ? '/tu-0121' : '';
 
 // 生产环境如果没有配置 API 地址，使用相对路径（适配 GitHub Pages）
-// 注意：Mock 数据只在开发环境的 Vite 服务器中工作，生产环境需要真实后端
 const getBaseURL = () => {
   // 开发环境使用 Mock
   if (useMock && import.meta.env.DEV) {
@@ -20,9 +17,8 @@ const getBaseURL = () => {
     return apiBaseUrl;
   }
 
-  // 生产环境：使用 basePath 适配 GitHub Pages
-  // 由于生产环境没有 Mock，这里只是占位，实际需要后端 API
-  return basePath ? `${basePath}/api` : '/api';
+  // 生产环境：使用相对路径适配 GitHub Pages
+  return './api';
 };
 
 const instance: AxiosInstance = axios.create({

@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
   const useMock = env.VITE_USE_MOCK === 'true';
 
   return {
-    base: mode === 'production' ? '/tu-0121/' : './',
+    base: './', // 使用相对路径，适配任意部署环境
     plugins: [
       vue(),
       legacy({
