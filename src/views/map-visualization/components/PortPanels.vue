@@ -196,6 +196,14 @@ defineExpose({
   justify-content: space-between;
   gap: 8px;
   line-height: 1.4;
+  
+  // 移动端适配
+  @media (max-width: 768px) {
+    margin-bottom: 5px; // 从6px减少到5px
+    gap: 6px; // 从4px增加到6px，更好地区分label和value
+    flex-direction: column;
+    line-height: 1.3;
+  }
 }
 
 .info-item:last-child {
@@ -206,6 +214,11 @@ defineExpose({
   color: #666;
   font-size: 12px;
   white-space: nowrap;
+  
+  @media (max-width: 768px) {
+    font-size: 10px; // 从11px减小到10px
+    white-space: normal; // 允许换行，适应更窄的宽度
+  }
 }
 
 .info-item .value {
@@ -213,5 +226,11 @@ defineExpose({
   font-size: 12px;
   font-weight: 500;
   text-align: right;
+  
+  @media (max-width: 768px) {
+    font-size: 10px; // 从11px减小到10px
+    text-align: left;
+    word-break: break-all; // 允许长文本换行
+  }
 }
 </style>

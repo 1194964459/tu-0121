@@ -69,10 +69,16 @@ const getStepStatus = (index: number) => {
   z-index: 100;
   width: 100%;
   pointer-events: none;
+  
+  // 移动端适配
+  @media (max-width: 768px) {
+    bottom: 10px;
+    padding: 0 10px;
+  }
 }
 
 .timeline-wrapper {
-    display: flex;
+  display: flex;
   background: rgba(255, 255, 255, 0.9);
   padding: 30px 20px 10px;
   border-radius: 8px;
@@ -80,11 +86,42 @@ const getStepStatus = (index: number) => {
   pointer-events: auto;
   min-width: 500px;
   max-width: 80%;
+  
+  // 移动端适配
+  @media (max-width: 768px) {
+    padding: 20px 12px 8px;
+    min-width: auto;
+    max-width: 95%;
+    font-size: 12px;
+    flex-direction: column;
+    gap: 10px;
+    
+    // 调整时间轴标签
+    > div:first-child {
+      width: 100% !important;
+      margin-top: 0 !important;
+      text-align: center;
+      font-size: 12px;
+    }
+  }
 }
 
 .custom-steps {
   :deep(.ant-steps-item-container) {
     cursor: pointer;
+  }
+  
+  // 移动端适配
+  @media (max-width: 768px) {
+    :deep(.ant-steps-item-title) {
+      font-size: 11px !important;
+    }
+    
+    :deep(.ant-steps-item-icon) {
+      width: 20px !important;
+      height: 20px !important;
+      line-height: 20px !important;
+    }
   }
 }
 

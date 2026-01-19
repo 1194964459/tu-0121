@@ -118,13 +118,20 @@ const doInitMap = () => {
   if (!window.AMap || !mapContainer.value) return;
   
   try {
+    // 检测是否为移动设备
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    const initialZoom = isMobile ? 6.5 : 7.3; // 移动端使用较小的缩放级别
+    
     // 1. 优先初始化基础地图，提升首屏响应速度
     map.value = new window.AMap.Map(mapContainer.value, {
       center: [PORTS[0].lng, PORTS[0].lat],
-      zoom: 7.3,
+      zoom: initialZoom,
       zooms: [4, 18], // 限制缩放级别，避免无效渲染
       mapStyle: 'amap://styles/normal',
-      features: ['bg', 'point'] // 仅保留背景和点，减少矢量底图渲染压力
+      features: ['bg', 'point'], // 仅保留背景和点，减少矢量底图渲染压力
+      touchZoom: true, // 支持触摸缩放
+      doubleClickZoom: true, // 支持双击缩放
+      dragEnable: true // 支持拖拽
     });
         
     // 限制地图显示范围在中国区域
@@ -231,8 +238,13 @@ const initShipMarker = () => {
 const selectTimeNode = (index: number, oldIndex: number = 0) => {
   if (!map.value) return;
   const port = PORTS[TIMELINE_NODES[index].portIndex];
+  
+  // 检测移动设备，使用适合的缩放级别
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  const targetZoom = isMobile ? 6.5 : 7.3;
+  
   map.value.setCenter([port.lng, port.lat]);
-  map.value.setZoom(7.3);
+  map.value.setZoom(targetZoom);
   updateShipPosition(index, oldIndex);
   
   // 等待地图移动完成后再计算面板位置并显示
@@ -450,21 +462,48 @@ const updatePanelPositions = () => {
     shanghaiPanel 
   } = portPanelsRef.value;
   
-  // 业务面板（left）在港口左侧，偏移 -220px（面板宽度200 + 间距20）
+  // 检测是否为移动设备
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  
+  // 边界检测：确保面板不超出屏幕
+  const clampPosition = (x: number, y: number, panelWidth: number, panelHeight: number = 200) => {
+    const padding = 10; // 边距
+    const maxX = window.innerWidth - panelWidth - padding;
+    const maxY = window.innerHeight - panelHeight - padding;
+    
+    return {
+      x: Math.max(padding, Math.min(x, maxX)),
+      y: Math.max(padding, Math.min(y, maxY))
+    };
+  };
+  
+  // 业务面板（left）在港口左侧
   const updateLeftPanel = (panel: HTMLElement | null, portIdx: number) => {
     if (panel) {
       const port = PORTS[portIdx];
       const pos = map.value.lngLatToContainer([port.lng, port.lat]);
-      panel.style.transform = `translate(${pos.x - 240}px, ${pos.y - 80}px)`;
+      // 移动端使用更小的偏移量
+      const panelWidth = isMobile ? 120 : 200; // 更新为140px
+      const xOffset = isMobile ? -160 : -240; // 调整偏移量为面板宽度的一半
+      const yOffset = isMobile ? -80 : -80; // 移动端增加垂直偏移，避免遮挡小船
+      
+      const clamped = clampPosition(pos.x + xOffset, pos.y + yOffset, panelWidth);
+      panel.style.transform = `translate(${clamped.x}px, ${clamped.y}px)`;
     }
   };
   
-  // 物流面板（right）在港口右侧，偏移 +20px
+  // 物流面板（right）在港口右侧
   const updateRightPanel = (panel: HTMLElement | null, portIdx: number) => {
     if (panel) {
       const port = PORTS[portIdx];
       const pos = map.value.lngLatToContainer([port.lng, port.lat]);
-      panel.style.transform = `translate(${pos.x + 50}px, ${pos.y - 80}px)`;
+      // 移动端使用更小的偏移量
+      const panelWidth = isMobile ? 120 : 200; // 更新为140px
+      const xOffset = isMobile ? 40 : 50;
+      const yOffset = isMobile ? -100 : -80; // 移动端增加垂直偏移，避免遮挡小船
+      
+      const clamped = clampPosition(pos.x + xOffset, pos.y + yOffset, panelWidth);
+      panel.style.transform = `translate(${clamped.x}px, ${clamped.y}px)`;
     }
   };
   
@@ -483,9 +522,15 @@ const updatePanelPositions = () => {
       }
       
       const pos = map.value.lngLatToContainer(position);
-      // 如果是航行中跟随小船，增加纵向偏移量（-160px），避免遮挡小船
-      const yOffset = followShip ? -220 : -200;
-      panel.style.transform = `translate(${pos.x - 120}px, ${pos.y + yOffset}px)`;
+      // 移动端调整偏移量，确保面板在屏幕可见区域
+      const panelWidth = isMobile ? 160 : 240; // 更新为160px
+      const xOffset = isMobile ? -50 : -120; // 调整偏移量为面板宽度的一半
+      const yOffset = followShip 
+        ? (isMobile ? -260 : -220)
+        : (isMobile ? -260 : -200);
+      
+      const clamped = clampPosition(pos.x + xOffset, pos.y + yOffset, panelWidth);
+      panel.style.transform = `translate(${clamped.x}px, ${clamped.y}px)`;
     }
   };
   
@@ -548,6 +593,14 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
+  
+  // 移动端适配
+  @media (max-width: 768px) {
+    top: 10px;
+    right: 10px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
 }
 
 .zoom-label {
@@ -559,5 +612,9 @@ onUnmounted(() => {
   color: #1890ff;
   font-weight: 600;
   font-size: 16px;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 }
 </style>
